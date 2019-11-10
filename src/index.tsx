@@ -57,7 +57,7 @@ class UI extends Component {
             </div>
           )}
           <div>
-            <h4>Contacts</h4>
+            <h4>Relations</h4>
             <div class="bonds">
               {soul
                 .listBonds()
@@ -68,7 +68,7 @@ class UI extends Component {
           </div>
           {Object.values(soul.way).length > 0 && (
             <div>
-              <h4>Skills and Career</h4>
+              <h4>Skills</h4>
               <div class="bonds">
                 {Object.entries(soul.way)
                   .sort((a, b) => b[1] - a[1])

@@ -68,7 +68,7 @@ export function traijiStack(s, n) {
 
 export function traiji(s: Way, n = 1, big=false) {
   return (
-    <a href={s.ref} class="traiji">
+    <a href={s.ref} class="nobr">
       <span class= {big?"emoji":"emoji-trait"} style={n != 1 && "letter-spacing: -12px;"}>
         {s.emoji}
       </span>
@@ -106,7 +106,7 @@ export function wayCard(w: Way, value = 1) {
         <a href={w.ref} class="text-ref">
           {w.name}
         </a>
-        <div>{w.base && w.base.map(b => emojiSmall(b.emoji, b.ref))}</div>
+        <div class="nobr">{w.base && w.base.map(b => emojiSmall(b.emoji, b.ref))}</div>
       </div>
     </div>
   );

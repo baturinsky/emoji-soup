@@ -27,7 +27,7 @@ export default class Heritage extends Soul {
   secondaryBondWeight(other: Soul, value: number) {
     if (other.isWay) return 50 * value * (other as Way).importance;
     if (other.isGroup) return 50 * value;
-    if (other.isPerson) return other.alive ? 10 * Math.sign(value) : 0;
+    if (other.isPerson) return other.alive ? 20 * Math.sign(value) : 0;
     return 1;
   }
 

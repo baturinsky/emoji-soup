@@ -208,7 +208,7 @@
           if (other.isGroup)
               return 50 * value;
           if (other.isPerson)
-              return other.alive ? 10 * Math.sign(value) : 0;
+              return other.alive ? 20 * Math.sign(value) : 0;
           return 1;
       }
       get isHeritage() {
@@ -534,7 +534,7 @@
       return (h("a", { href: ref, class: "emoji-small" }, s));
   }
   function traiji(s, n = 1, big = false) {
-      return (h("a", { href: s.ref, class: "traiji" },
+      return (h("a", { href: s.ref, class: "nobr" },
           h("span", { class: big ? "emoji" : "emoji-trait", style: n != 1 && "letter-spacing: -12px;" }, s.emoji),
           n != 1 && h("span", { class: "emoji-number" }, n)));
   }
@@ -556,7 +556,7 @@
           traiji(w, value, true),
           h("div", null,
               h("a", { href: w.ref, class: "text-ref" }, w.name),
-              h("div", null, w.base && w.base.map(b => emojiSmall(b.emoji, b.ref))))));
+              h("div", { class: "nobr" }, w.base && w.base.map(b => emojiSmall(b.emoji, b.ref))))));
   }
   function ways(s) {
       return (h("div", null, Object.entries(s.way)
@@ -833,14 +833,14 @@
                       h("h4", null, soul.isPerson ? "Biography" : "History"),
                       soul.memories.map(m => memoryLine(soul, m)))),
                   h("div", null,
-                      h("h4", null, "Contacts"),
+                      h("h4", null, "Relations"),
                       h("div", { class: "bonds" }, soul
                           .listBonds()
                           .sort((a, b) => b[1] - a[1])
                           .filter(c => !c[0].isWay)
                           .map(c => [soulCard(c[0])]))),
                   Object.values(soul.way).length > 0 && (h("div", null,
-                      h("h4", null, "Skills and Career"),
+                      h("h4", null, "Skills"),
                       h("div", { class: "bonds" }, Object.entries(soul.way)
                           .sort((a, b) => b[1] - a[1])
                           .map(c => [soulCard(world.way[c[0]], c[1])])))))));
