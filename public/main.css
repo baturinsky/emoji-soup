@@ -1,0 +1,142 @@
+@font-face {
+  font-family: "TextFont";
+  src: url("./DidactGothic.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Emoji";
+  src: url("./NotoColorEmoji.ttf");
+}
+
+body,
+button,
+div {
+  font-family: TextFont;
+  font-size: 16px;
+}
+
+.emoji {
+  font-size: 32px;
+  font-family: Emoji;
+  line-height: 140%;
+}
+
+.emoji-small {
+  font-size: 16px;
+  font-family: Emoji;
+}
+
+.emoji-medium {
+  font-size: 24px;
+  font-family: Emoji;
+}
+
+.centered {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.emoji-trait {
+  font-size: 24px;
+  font-family: Emoji;
+}
+
+.emoji-number {
+  font-family: Emoji;
+  font-weight: 900;
+  vertical-align: sub;
+  letter-spacing: -4px;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.trail {
+  letter-spacing: -18px;
+  font-size: 80%;
+  opacity: 70%;
+}
+
+.head {
+  opacity: 99.9%;
+}
+
+.card {
+  display: inline-flex;
+  padding-right: 5px;
+  margin: 2px;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 2px;
+}
+
+.vertical {
+  flex-direction: column;
+  text-align: center;
+}
+
+.horisontal {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a.emoji:hover,
+a.emoji-small:hover,
+a.emoji-medium:hover,
+a.traiji:hover {
+  opacity: 80%;
+}
+
+.text-ref {
+  text-decoration: underline;
+}
+
+.text-ref:hover {  
+  color:red;
+}
+
+.dead {
+  border: solid 2px black;
+}
+
+.heritage {
+  box-shadow: 2px 1px 0px #630;
+  background: #840;
+  color: white;
+  padding: 2px;
+  filter: contrast(120%) sepia(80%);
+  margin-right: 10px;
+  width:40px;
+  text-align: center;
+}
+
+.heritage-title {
+  margin: 2px;
+  font-size: 30%;
+  width: 20px;
+  text-align: center;
+  margin: auto;
+}
+
+.bonds {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-bottom: dotted 1px black;
+}
+
+h4 {
+  margin: 5px;
+}
