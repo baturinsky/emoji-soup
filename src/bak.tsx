@@ -2,6 +2,8 @@ import World from "./World";
 import Person from "./Person";
 import { emoji, face } from "./ui";
 import { worker } from "cluster";
+import { h } from "preact";
+import { random } from "./util";
 
 function bak(){
   const setting = {
@@ -91,4 +93,24 @@ function listCompatibility(){
     }
   return s;
 }*/
+
+
+function personCardSmall(p: Person) {
+  let r = random(p.id + 10);
+  let personRef = "#person-" + p.id + "-" + p.dashedName;
+  let style = `filter: hue-rotate(${25 - (r() % 50)}deg) contrast(${70 +
+    (r() % 60)}%) saturate(${70 + (r() % 60)}%);`;
+  return (
+    <div class="card">
+      <a href={personRef} style={style} class="text-ref">
+        {emoji(face(p), p.ref)}
+      </a>
+      <a href={personRef} class="text-ref">
+        {p.name.split("\t").map(s => (
+          <div>{s}</div>
+        ))}
+      </a>
+    </div>
+  );
+}
 

@@ -58,18 +58,18 @@ export function emojiSmall(s, ref: string) {
 export function traijiStack(s, n) {
   return s.repeat ? (
     <span class="emoji-trait">
-      <span class="trail">{s.repeat(n - 1)}</span>
-      <span class="head">{s}</span>
+      <span class="traiji-tail">{s.repeat(n - 1)}</span>
+      <span class="traiji-head">{s}</span>
     </span>
   ) : (
     ""
   );
 }
 
-export function traiji(s: Way, n = 1) {
+export function traiji(s: Way, n = 1, big=false) {
   return (
     <a href={s.ref} class="traiji">
-      <span class="emoji-trait" style={n != 1 && "letter-spacing: -12px;"}>
+      <span class= {big?"emoji":"emoji-trait"} style={n != 1 && "letter-spacing: -12px;"}>
         {s.emoji}
       </span>
       {n != 1 && <span class="emoji-number">{n}</span>}
@@ -78,25 +78,6 @@ export function traiji(s: Way, n = 1) {
 }
 
 export function personCard(p: Person) {
-  let r = random(p.id + 10);
-  let personRef = "#person-" + p.id + "-" + p.dashedName;
-  let style = `filter: hue-rotate(${25 - (r() % 50)}deg) contrast(${70 +
-    (r() % 60)}%) saturate(${70 + (r() % 60)}%);`;
-  return (
-    <div class="card">
-      <a href={personRef} style={style} class="text-ref">
-        {emoji(face(p), p.ref)}
-      </a>
-      <a href={personRef} class="text-ref">
-        {p.name.split("\t").map(s => (
-          <div>{s}</div>
-        ))}
-      </a>
-    </div>
-  );
-}
-
-export function personCard2(p: Person) {
   let r = random(p.id + 10);
   let style = `filter: hue-rotate(${25 - (r() % 50)}deg) contrast(${70 +
     (r() % 60)}%) saturate(${70 + (r() % 60)}%);`;
@@ -117,10 +98,10 @@ export function personCard2(p: Person) {
   );
 }
 
-export function wayCard(w: Way) {
+export function wayCard(w: Way, value = 1) {
   return (
     <div class="card">
-      {emoji(w.emoji, w.ref)}
+      {traiji(w, value, true)}
       <div>
         <a href={w.ref} class="text-ref">
           {w.name}
@@ -158,13 +139,13 @@ export function heritageCard(ht: Heritage) {
   );
 }
 
-export function soulCard2(s: Soul) {
-  if (s instanceof Person) return personCard2(s);
-  else if (s instanceof Way) return wayCard(s);
+export function soulCard(s: Soul, value = 1) {
+  if (s instanceof Person) return personCard(s);
+  else if (s instanceof Way) return wayCard(s, value);
   else if (s instanceof Heritage) return heritageCard(s);
   else
     return (
-      <a class="card" href={s.ref}>
+      <a class="card text-ref" href={s.ref} style="font-size:150%; line-height:200%;">
         {s.name || "Unknown"}
       </a>
     );
@@ -260,7 +241,7 @@ export function memoryLine(subject:Soul, m: Memory) {
   }
 
   return (
-    <div style="white-space: nowrap;">
+    <div class="memory">
       {m.year}. {text}
     </div>
   );

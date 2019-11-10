@@ -51,13 +51,13 @@ div {
   text-shadow: 1px 1px 2px #000;
 }
 
-.trail {
+.traiji-trail {
   letter-spacing: -18px;
   font-size: 80%;
   opacity: 70%;
 }
 
-.head {
+.traiji-head {
   opacity: 99.9%;
 }
 
@@ -130,7 +130,7 @@ a.traiji:hover {
   flex-wrap: wrap;
 }
 
-.head {
+.current-title {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -140,3 +140,31 @@ a.traiji:hover {
 h4 {
   margin: 5px;
 }
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.spacer{
+  flex-grow: 1;
+}
+
+.memory{
+  min-width: 350px;
+}
+
+button{
+  background: white;
+  cursor: pointer;
+  border:solid 1px black;
+  margin:2px;
+  box-shadow: 2px 2px 0px black;
+}
+
+button:hover{
+  background: #ddd;
+}
+

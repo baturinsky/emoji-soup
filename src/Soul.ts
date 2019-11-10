@@ -25,8 +25,10 @@ export default class Soul {
     return !this.died;
   }
   
-  constructor(public world: World) {
+  constructor(public world: World, name?:string) {
     if (world) world.register(this);
+    if(name)
+      this.name = name;
   }
 
   bindBoth(other: Soul, kind: number, backKind: number) {

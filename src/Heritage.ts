@@ -14,6 +14,7 @@ export default class Heritage extends Soul {
         this.setWay(way[0], way[1]);
       }
     }
+    this.bindBoth(this.world.heritage, 1, 1);
   }
 
   bondWeight(other: Soul, value: number) {

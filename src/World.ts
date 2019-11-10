@@ -9,7 +9,9 @@ export default class World {
   rni = random(1);
   namer = new Namer(this.rni);
   way: { [key: string]: Way } = {};
+  
   people: Person[] = [];
+
   lastId = 0;
   year = 1000;
   careerFrequency: number[];
@@ -17,9 +19,10 @@ export default class World {
   human: Group;
   races: Group[] = [];
   culture: Group;
-
   careers: Way[];
   skills: Way[];
+
+  heritage: Group;
 
   register(soul: Soul) {
     soul.id = this.nextId();
@@ -59,9 +62,10 @@ export default class World {
     this.careers = Object.values(this.way).filter(w => w.isCareer);
     this.skills = Object.values(this.way).filter(w => !w.isCareer);
 
-    this.human = new Group(this);
+    this.human = new Group(this, "Human");
     for (let way of ["fitness", "logic", "charisma"]) this.human.setWay(way, 1);
-    this.human.name = "Human";
+
+    this.heritage = new Group(this, "Heritage")
 
     this.culture = new Group(this);
     this.culture.name = "culture";
@@ -70,14 +74,17 @@ export default class World {
     }
 
     for(let raceInd in setting.races){
-      let race = new Group(this);
-      race.name = "race\t" + raceInd;
+      let race = new Group(this, "Race\t" + raceInd);
       this.races[raceInd] = race;
     }
 
-    let lastYear = this.year + 120;
+    this.advance(120);
+  }
+
+  advance(years:number){
+    let lastYear = this.year + years;
     for (; this.year < lastYear ; this.year++) {
-      for (let i = 0; i < 5; i++){
+      for (let i = 0; i < 7; i++){
         new Person(this);
       }
   

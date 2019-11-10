@@ -69,7 +69,7 @@
   Namer.FEMALEFULL = [Namer.FEMALE, Namer.SURNAME];
 
   class Soul {
-      constructor(world) {
+      constructor(world, name) {
           this.world = world;
           this.way = {};
           this.bonds = {};
@@ -77,6 +77,8 @@
           this.died = 0;
           if (world)
               world.register(this);
+          if (name)
+              this.name = name;
       }
       get alive() {
           return !this.died;
@@ -189,6 +191,7 @@
                   this.setWay(way[0], way[1]);
               }
           }
+          this.bindBoth(this.world.heritage, 1, 1);
       }
       bondWeight(other, value) {
           if (other.isWay)
@@ -527,18 +530,15 @@
           return race[p.gender] + skintones[p.skintone];
       }
   }
-  function emoji(s, ref) {
-      return (h("a", { href: ref, class: "emoji" }, s));
-  }
   function emojiSmall(s, ref) {
       return (h("a", { href: ref, class: "emoji-small" }, s));
   }
-  function traiji(s, n = 1) {
+  function traiji(s, n = 1, big = false) {
       return (h("a", { href: s.ref, class: "traiji" },
-          h("span", { class: "emoji-trait", style: n != 1 && "letter-spacing: -12px;" }, s.emoji),
+          h("span", { class: big ? "emoji" : "emoji-trait", style: n != 1 && "letter-spacing: -12px;" }, s.emoji),
           n != 1 && h("span", { class: "emoji-number" }, n)));
   }
-  function personCard2(p) {
+  function personCard(p) {
       let r = random(p.id + 10);
       let style = `filter: hue-rotate(${25 - (r() % 50)}deg) contrast(${70 +
         (r() % 60)}%) saturate(${70 + (r() % 60)}%);`;
@@ -551,9 +551,9 @@
                   p.alive ? p.age + "y." : p.created + "-" + p.died),
               ways(p))));
   }
-  function wayCard(w) {
+  function wayCard(w, value = 1) {
       return (h("div", { class: "card" },
-          emoji(w.emoji, w.ref),
+          traiji(w, value, true),
           h("div", null,
               h("a", { href: w.ref, class: "text-ref" }, w.name),
               h("div", null, w.base && w.base.map(b => emojiSmall(b.emoji, b.ref))))));
@@ -575,15 +575,15 @@
                   ht.created),
               ways(ht))));
   }
-  function soulCard2(s) {
+  function soulCard(s, value = 1) {
       if (s instanceof Person)
-          return personCard2(s);
+          return personCard(s);
       else if (s instanceof Way)
-          return wayCard(s);
+          return wayCard(s, value);
       else if (s instanceof Heritage)
           return heritageCard(s);
       else
-          return (h("a", { class: "card", href: s.ref }, s.name || "Unknown"));
+          return (h("a", { class: "card text-ref", href: s.ref, style: "font-size:150%; line-height:200%;" }, s.name || "Unknown"));
   }
   function soulRef(soul) {
       if (!soul)
@@ -710,7 +710,7 @@
                   }
           }
       }
-      return (h("div", { style: "white-space: nowrap;" },
+      return (h("div", { class: "memory" },
           m.year,
           ". ",
           text));
@@ -745,29 +745,20 @@
               way.linkWay();
           this.careers = Object.values(this.way).filter(w => w.isCareer);
           this.skills = Object.values(this.way).filter(w => !w.isCareer);
-          this.human = new Group(this);
+          this.human = new Group(this, "Human");
           for (let way of ["fitness", "logic", "charisma"])
               this.human.setWay(way, 1);
-          this.human.name = "Human";
+          this.heritage = new Group(this, "Heritage");
           this.culture = new Group(this);
           this.culture.name = "culture";
           for (let wayName in this.way) {
               this.culture.way[wayName] = 5;
           }
           for (let raceInd in setting.races) {
-              let race = new Group(this);
-              race.name = "race\t" + raceInd;
+              let race = new Group(this, "Race\t" + raceInd);
               this.races[raceInd] = race;
           }
-          let lastYear = this.year + 120;
-          for (; this.year < lastYear; this.year++) {
-              for (let i = 0; i < 5; i++) {
-                  new Person(this);
-              }
-              for (let p of this.people) {
-                  p.live();
-              }
-          }
+          this.advance(120);
       }
       register(soul) {
           soul.id = this.nextId();
@@ -775,6 +766,17 @@
       }
       heritageName(way) {
           return setting.careers[way.name][3];
+      }
+      advance(years) {
+          let lastYear = this.year + years;
+          for (; this.year < lastYear; this.year++) {
+              for (let i = 0; i < 7; i++) {
+                  new Person(this);
+              }
+              for (let p of this.people) {
+                  p.live();
+              }
+          }
       }
       nextId() {
           return ++this.lastId;
@@ -795,27 +797,53 @@
           this.checkHash = () => {
               let hash = document.location.hash.replace("%20", " ");
               let current = world.souls[hash.split("-")[1]];
+              console.log(current);
               if (current)
                   this.setState({ current: current });
           };
           window.onhashchange = this.checkHash;
           this.checkHash();
       }
+      advance(years) {
+          world.advance(years);
+          this.setState({ world });
+      }
       render() {
+          let soul = this.state.current;
           return (h("div", null,
-              h("div", { class: "head" }, soulCard2(this.state.current)),
+              h("div", { class: "menu" },
+                  "Year: ",
+                  world.year,
+                  h("button", { onClick: e => this.advance(1) }, "+1 year"),
+                  h("button", { onClick: e => this.advance(10) }, "+10 years"),
+                  h("div", { class: "spacer" }),
+                  h("div", null,
+                      soulRef(world.heritage),
+                      " (",
+                      Object.values(world.heritage.bonds).length,
+                      ") ",
+                      soulRef(world.human),
+                      " ",
+                      "(",
+                      Object.values(world.human.bonds).length,
+                      ")")),
+              h("div", { class: "current-title" }, soulCard(soul)),
               h("div", { class: "horisontal" },
-                  this.state.current.memories &&
-                      this.state.current.memories.length > 0 && (h("div", null,
-                      h("h4", null, "History"),
-                      this.state.current.memories.map(m => memoryLine(this.state.current, m)))),
+                  soul.memories && soul.memories.length > 0 && (h("div", null,
+                      h("h4", null, soul.isPerson ? "Biography" : "History"),
+                      soul.memories.map(m => memoryLine(soul, m)))),
                   h("div", null,
                       h("h4", null, "Contacts"),
-                      h("div", { class: "bonds" }, this.state.current
+                      h("div", { class: "bonds" }, soul
                           .listBonds()
                           .sort((a, b) => b[1] - a[1])
                           .filter(c => !c[0].isWay)
-                          .map(c => [soulCard2(c[0])]))))));
+                          .map(c => [soulCard(c[0])]))),
+                  Object.values(soul.way).length > 0 && (h("div", null,
+                      h("h4", null, "Skills and Career"),
+                      h("div", { class: "bonds" }, Object.entries(soul.way)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(c => [soulCard(world.way[c[0]], c[1])])))))));
       }
   }
   window.onload = function () {

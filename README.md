@@ -1,2 +1,2 @@
 # emoji-soup
-Society simulator
+A society simulator
